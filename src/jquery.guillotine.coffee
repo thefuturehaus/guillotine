@@ -162,6 +162,9 @@ class Guillotine
       # In case of mad experiments (SVGs, canvas, etc.).
       width = el.width(); height = el.height()
 
+    @origW = width
+    @origH = height
+
     # Canvas
     ## Fullsize image dimensions relative to the restrictions.
     @width = width/@op.width
@@ -272,6 +275,10 @@ class Guillotine
       @data.y = Math.round top * @op.height
 
 
+  _setZoom: (factor) ->
+    @_zoom factor / @data.scale
+
+
   _zoom: (factor) ->
     return if factor <= 0 or factor == 1
     w = @width; h = @height
@@ -373,6 +380,7 @@ class Guillotine
   rotateRight: -> @enabled and (@_rotate(90);           @_trigger('rotateRight'))
   center:      -> @enabled and (@_center();             @_trigger('center'))
   fit:         -> @enabled and (@_fit(); @_center();    @_trigger('fit'))
+  setZoom: (z) -> @enabled and (@_setZoom(z);           @_trigger(if z > @data.scale then 'zoomIn' else 'zoomOut'))
   zoomIn:      -> @enabled and (@_zoom(@zoomInFactor);  @_trigger('zoomIn'))
   zoomOut:     -> @enabled and (@_zoom(@zoomOutFactor); @_trigger('zoomOut'))
 
